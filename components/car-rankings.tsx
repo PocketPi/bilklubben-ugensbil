@@ -13,7 +13,7 @@ const cars = [
     points: 95,
     manufacturer: "Porsche",
     model: "911 GT3",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://www.porsche.dk/globalassets/modeller/911/911-gt3-modeller/911-gt3-rs/slider_911gt3rs_640x720px_1.jpg",
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const cars = [
     points: 88,
     manufacturer: "BMW",
     model: "M3 Competition",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://hips.hearstapps.com/hmg-prod/images/2025-bmw-m3-110-66562ddceaf59.jpg?crop=0.824xw:0.618xh;0.0737xw,0.274xh&resize=2048:*",
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ const cars = [
     points: 85,
     manufacturer: "Audi",
     model: "RS6 Avant",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://media.audi.com/is/image/audi/nemo/models/a6/rs-6-avant-performance/my-2023/parallax-teaser/RS_6_2022_4355-XL.jpg?auto=webp&width=1920",
   },
 ]
 
@@ -86,4 +86,3 @@ export function CarRankings() {
     </>
   )
 }
-
