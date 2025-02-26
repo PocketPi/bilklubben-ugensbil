@@ -4,6 +4,8 @@ import "./globals.css";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
+import { cn } from "@/lib/utils"
+import { ThemeProvider } from "@/components/theme-provider"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,18 +25,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <ClerkProvider>
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+      <body className={cn(
+        "min-h-screen font-sans antialiased",
+        geistSans.variable,
+        geistMono.variable
+      )}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={true}
+          disableTransitionOnChange
+          suppressHydrationWarnings
+        >
+          <ClerkProvider>
+            {children}
+          </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }

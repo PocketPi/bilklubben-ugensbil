@@ -4,33 +4,38 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import * as z from "zod"
+import { useState } from "react"
+import Image from "next/image"
+import { X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { UploadButton } from "@/app/utils/uploadthing"
 
 const formSchema = z.object({
   manufacturer: z.string().min(1, "Manufacturer is required"),
   model: z.string().min(1, "Model is required"),
   points: z.string().transform(Number).pipe(z.number().min(0).max(100)),
-  image: z.string().url("Please enter a valid image URL"),
 })
 
 export function AddCarForm() {
   const router = useRouter()
+  const [isImageUploaded, setIsImageUploaded] = useState(false)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       manufacturer: "",
       model: "",
       points: 0,
-      image: "",
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Here you would typically send the data to your backend
-    console.log(values)
+    console.log({ ...values, imageUrl })
     router.push("/")
   }
 
@@ -76,20 +81,50 @@ export function AddCarForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+
+        <div className="space-y-4">
+          <FormLabel>Car Image</FormLabel>
+          {imageUrl ? (
+            <div className="relative w-full aspect-video">
+              <Image
+                src={imageUrl}
+                alt="Uploaded car image"
+                fill
+                className="object-cover rounded-lg"
+              />
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                className="absolute top-2 right-2"
+                onClick={() => {
+                  setImageUrl(null)
+                  setIsImageUploaded(false)
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                if (res?.[0]) {
+                  setImageUrl(res[0].url)
+                  setIsImageUploaded(true)
+                }
+              }}
+              onUploadError={(error: Error) => {
+                setIsImageUploaded(false)
+                alert(`ERROR! ${error.message}`)
+              }}
+            />
           )}
-        />
-        <Button type="submit">Add Car</Button>
+        </div>
+
+        <Button type="submit" disabled={!isImageUploaded}>
+          Add Car
+        </Button>
       </form>
     </Form>
   )
