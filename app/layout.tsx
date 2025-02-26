@@ -12,11 +12,16 @@ const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
+  display: "swap",
+  preload: false
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+  display: "swap",
+  preload: false
 });
 
 export const metadata: Metadata = {
@@ -24,33 +29,13 @@ export const metadata: Metadata = {
   description: "Bilklubben Podcast - Ugens Bil",
 };
 
-function NoFlashScript() {
-  return (
-    <script
-      dangerouslySetInnerHTML={{
-        __html: `
-          if (localStorage.getItem('theme') === 'dark' ||
-            (!localStorage.getItem('theme') &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches)
-          ) {
-            document.documentElement.classList.add('ut--dark')
-          }
-        `,
-      }}
-    />
-  );
-}
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <head>
-        <NoFlashScript />
-      </head>
+    <html lang="en" suppressHydrationWarning>
       <body className={cn(
         "min-h-screen font-sans antialiased",
         geistSans.variable,
@@ -62,6 +47,7 @@ export default function RootLayout({
           enableSystem={true}
           disableTransitionOnChange
           suppressHydrationWarnings
+          storageKey="theme"
         >
           <ClerkProvider>
             {children}

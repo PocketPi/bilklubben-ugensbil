@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import React from "react"
 
 // This would typically come from an API or database
 const cars = [
@@ -33,6 +34,8 @@ const cars = [
   },
 ]
 
+const placeholderImage = "/placeholder.svg"
+
 export function CarRankings() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
@@ -50,9 +53,9 @@ export function CarRankings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {cars.map((car) => (
-              <>
-                <TableRow key={`${car.id}-text`}>
+            {cars.map((car, index) => (
+              <React.Fragment key={car.id}>
+                <TableRow>
                   <TableCell className="font-medium">{car.rank}</TableCell>
                   <TableCell>{car.points}/100</TableCell>
                   <TableCell>{car.manufacturer}</TableCell>
@@ -60,29 +63,33 @@ export function CarRankings() {
                   <TableCell className="min-[501px]:align-middle max-[500px]:hidden p-2">
                     <div className="relative aspect-[3/2] w-full">
                       <Image
-                        src={car.image || "/placeholder.svg"}
+                        src={car.image || placeholderImage}
                         alt={`${car.manufacturer} ${car.model}`}
                         fill
+                        sizes="(min-width: 501px) 200px, 100vw"
+                        priority={index === 0}
                         className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
-                        onClick={() => setSelectedImage(car.image)}
+                        onClick={() => car.image && setSelectedImage(car.image)}
                       />
                     </div>
                   </TableCell>
                 </TableRow>
-                <TableRow key={`${car.id}-image`} className="min-[501px]:hidden">
+                <TableRow className="min-[501px]:hidden">
                   <TableCell colSpan={4} className="pt-2 pb-6 text-center">
                     <div className="relative aspect-[3/2] w-[200px] mx-auto">
                       <Image
-                        src={car.image || "/placeholder.svg"}
+                        src={car.image || placeholderImage}
                         alt={`${car.manufacturer} ${car.model}`}
                         fill
+                        sizes="200px"
+                        priority={index === 0}
                         className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
-                        onClick={() => setSelectedImage(car.image)}
+                        onClick={() => car.image && setSelectedImage(car.image)}
                       />
                     </div>
                   </TableCell>
                 </TableRow>
-              </>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>
@@ -92,10 +99,11 @@ export function CarRankings() {
         <DialogContent className="max-w-3xl">
           {selectedImage && (
             <Image
-              src={selectedImage || "/placeholder.svg"}
+              src={selectedImage}
               alt="Selected car"
               width={800}
               height={600}
+              sizes="(max-width: 768px) 100vw, 800px"
               className="w-full h-auto"
             />
           )}
