@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## todo
 - [ ] add episode field to schema
+- [ ] add car to database incl image url
+- [ ] fetch cars from db
 
 
 ## Getting Started
