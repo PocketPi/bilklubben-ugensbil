@@ -38,37 +38,55 @@ export function CarRankings() {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Rank</TableHead>
-            <TableHead>Points</TableHead>
-            <TableHead>Manufacturer</TableHead>
-            <TableHead>Model</TableHead>
-            <TableHead>Image</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {cars.map((car) => (
-            <TableRow key={car.id}>
-              <TableCell className="font-medium">{car.rank}</TableCell>
-              <TableCell>{car.points}/100</TableCell>
-              <TableCell>{car.manufacturer}</TableCell>
-              <TableCell>{car.model}</TableCell>
-              <TableCell>
-                <Image
-                  src={car.image || "/placeholder.svg"}
-                  alt={`${car.manufacturer} ${car.model}`}
-                  width={150}
-                  height={100}
-                  className="rounded-md cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => setSelectedImage(car.image)}
-                />
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Rank</TableHead>
+              <TableHead>Points</TableHead>
+              <TableHead>Manufacturer</TableHead>
+              <TableHead>Model</TableHead>
+              <TableHead className="max-[500px]:hidden">Image</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {cars.map((car) => (
+              <>
+                <TableRow key={`${car.id}-text`}>
+                  <TableCell className="font-medium">{car.rank}</TableCell>
+                  <TableCell>{car.points}/100</TableCell>
+                  <TableCell>{car.manufacturer}</TableCell>
+                  <TableCell>{car.model}</TableCell>
+                  <TableCell className="min-[501px]:align-middle max-[500px]:hidden">
+                    <Image
+                      src={car.image || "/placeholder.svg"}
+                      alt={`${car.manufacturer} ${car.model}`}
+                      width={150}
+                      height={100}
+                      className="rounded-md cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => setSelectedImage(car.image)}
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow key={`${car.id}-image`} className="min-[501px]:hidden">
+                  <TableCell colSpan={4} className="pt-2 pb-6 text-center">
+                    <div className="flex justify-center">
+                      <Image
+                        src={car.image || "/placeholder.svg"}
+                        alt={`${car.manufacturer} ${car.model}`}
+                        width={150}
+                        height={100}
+                        className="rounded-md cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => setSelectedImage(car.image)}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="max-w-3xl">

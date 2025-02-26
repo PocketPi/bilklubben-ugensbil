@@ -10,7 +10,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="max-w-3xl mx-auto px-4 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <Car className="h-6 w-6" />
           <span className="text-xl font-bold">Bilklubben Podcast</span>
