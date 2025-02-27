@@ -2,6 +2,7 @@ import "server-only";
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import { cars as carsSchema } from "./schema";
+import { desc } from "drizzle-orm";
 const db = drizzle(process.env.DATABASE_URL!);
 
 export const QUERIES = {
@@ -9,7 +10,7 @@ export const QUERIES = {
         return db
             .select()
             .from(carsSchema)
-            .orderBy(carsSchema.id);
+            .orderBy(desc(carsSchema.points));
     },
 };
 
