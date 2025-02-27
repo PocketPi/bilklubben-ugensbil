@@ -6,5 +6,6 @@ export const cars = pgTable('cars', {
   model: text('model'),
   points: integer('points'),
   imageUrl: text('image_url'),
+  episode: integer('episode'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
