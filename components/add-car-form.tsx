@@ -17,6 +17,7 @@ const formSchema = z.object({
   manufacturer: z.string().min(1, "Manufacturer is required"),
   model: z.string().min(1, "Model is required"),
   points: z.string().transform(Number).pipe(z.number().min(0).max(100)),
+  episode: z.string().transform(Number).pipe(z.number().min(1)),
 })
 
 export function AddCarForm() {
@@ -30,6 +31,7 @@ export function AddCarForm() {
       manufacturer: "",
       model: "",
       points: 0,
+      episode: 1,
     },
   })
 
@@ -45,7 +47,7 @@ export function AddCarForm() {
           model: values.model,
           points: values.points,
           imageUrl: imageUrl,
-          episode: 1, // You might want to make this dynamic
+          episode: values.episode,
         }),
       })
 
@@ -97,6 +99,19 @@ export function AddCarForm() {
               <FormLabel>Points (0-100)</FormLabel>
               <FormControl>
                 <Input type="number" min="0" max="100" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="episode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Episode Number</FormLabel>
+              <FormControl>
+                <Input type="number" min="1" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
