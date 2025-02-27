@@ -46,7 +46,6 @@ export default function RootLayout({
           defaultTheme="dark"
           enableSystem={true}
           disableTransitionOnChange
-          suppressHydrationWarnings
           storageKey="theme"
         >
           <ClerkProvider>
