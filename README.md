@@ -4,3 +4,4 @@
 - [ ] add car to database incl image url
 - [ ] fetch cars from db
 - [ ] add PostHogProvider
+- [ ] get placeholder image from NP
