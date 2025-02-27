@@ -7,6 +7,7 @@ import {
 } from '@clerk/nextjs'
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,6 +42,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable
       )}>
+        <SpeedInsights />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
