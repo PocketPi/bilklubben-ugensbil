@@ -33,10 +33,31 @@ export function AddCarForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here you would typically send the data to your backend
-    console.log({ ...values, imageUrl })
-    router.push("/")
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch('/api/cars', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          manufacturer: values.manufacturer,
+          model: values.model,
+          points: values.points,
+          imageUrl: imageUrl,
+          episode: 1, // You might want to make this dynamic
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create car')
+      }
+
+      router.push("/")
+      router.refresh()
+    } catch (error) {
+      console.error('Error creating car:', error)
+    }
   }
 
   return (
