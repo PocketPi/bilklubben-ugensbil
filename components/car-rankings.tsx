@@ -38,7 +38,7 @@ export async function CarRankings() {
                           alt={`${car.manufacturer} ${car.model}`}
                           fill
                           sizes="(min-width: 501px) 200px, 100vw"
-                          priority={index === 0}
+                          priority={index < 3}
                           className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
                         />
                       </div>
@@ -54,7 +54,7 @@ export async function CarRankings() {
                           alt={`${car.manufacturer} ${car.model}`}
                           fill
                           sizes="200px"
-                          priority={index === 0}
+                          priority={index < 3}
                           className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
                         />
                       </div>
