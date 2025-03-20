@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable
       )}>
+        <Analytics />
         <SpeedInsights />
         <ThemeProvider
           attribute="class"
