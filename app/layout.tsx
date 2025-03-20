@@ -43,7 +43,6 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable
       )}>
-        <SpeedInsights />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -55,6 +54,7 @@ export default function RootLayout({
             {children}
           </ClerkProvider>
         </ThemeProvider>
+        <SpeedInsights />
         <Analytics />
       </body>
     </html>
