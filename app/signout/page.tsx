@@ -1,12 +1,18 @@
 import {
-    ClerkProvider,
     SignOutButton,
 } from '@clerk/nextjs'
+import { Button } from '@/components/ui/button'
 
-export default function SignInPage() {
+export default function SignOutPage() {
     return (
-        <ClerkProvider>
-            <SignOutButton />
-        </ClerkProvider>
+        <div className="min-h-screen flex items-center justify-center">
+            <SignOutButton 
+                redirectUrl={"/"}
+            >
+                <Button size="lg" className="text-base">
+                    Sign Out
+                </Button>
+            </SignOutButton>
+        </div>
     )
 }
