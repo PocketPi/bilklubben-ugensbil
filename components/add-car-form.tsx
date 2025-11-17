@@ -136,12 +136,12 @@ export function AddCarForm() {
         <div className="space-y-4">
           <FormLabel>Car Image</FormLabel>
           {imageUrl ? (
-            <div className="relative w-full aspect-video">
+            <div className="relative w-full h-96 flex items-center justify-center bg-muted/50 rounded-lg">
               <Image
                 src={imageUrl}
                 alt="Uploaded car image"
                 fill
-                className="object-cover rounded-lg"
+                className="object-contain rounded-lg"
               />
               <Button
                 type="button"
