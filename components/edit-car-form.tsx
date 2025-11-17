@@ -37,7 +37,7 @@ interface EditCarFormProps {
 }
 
 export interface EditCarFormRef {
-  submit: () => void
+  submit: () => Promise<void>
   imageUrl: string | null
 }
 
@@ -64,11 +64,41 @@ export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
 
     const formRef = useRef<HTMLFormElement>(null)
 
+    const onSubmit = useCallback(async (values: FormValues) => {
+      try {
+        // Get the current imageUrl from state to avoid stale closure
+        const currentImageUrl = imageUrl
+        const response = await fetch(`/api/cars/${car.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            manufacturer: values.manufacturer,
+            model: values.model,
+            points: values.points,
+            imageUrl: currentImageUrl,
+            episode: values.episode,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to update car')
+        }
+
+        router.refresh()
+        onSuccess?.()
+      } catch (error) {
+        console.error('Error updating car:', error)
+      }
+    }, [car.id, imageUrl, router, onSuccess])
+
     useImperativeHandle(ref, () => ({
       submit: async () => {
         if (formRef.current) {
           formRef.current.requestSubmit()
         } else {
+          // Fallback: manually trigger validation and submit
           const isValid = await form.trigger()
           if (isValid) {
             const values = form.getValues()
@@ -79,40 +109,13 @@ export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
       imageUrl,
     }), [form, imageUrl, onSubmit])
 
-  useEffect(() => {
-    if (car.imageUrl) {
-      setImageUrl(car.imageUrl)
-      onImageUrlChange?.(car.imageUrl)
-      setIsImageUploaded(true)
-    }
-  }, [car.imageUrl, onImageUrlChange])
-
-  const onSubmit = useCallback(async (values: FormValues) => {
-    try {
-      const response = await fetch(`/api/cars/${car.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          manufacturer: values.manufacturer,
-          model: values.model,
-          points: values.points,
-          imageUrl: imageUrl,
-          episode: values.episode,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update car')
+    useEffect(() => {
+      if (car.imageUrl) {
+        setImageUrl(car.imageUrl)
+        onImageUrlChange?.(car.imageUrl)
+        setIsImageUploaded(true)
       }
-
-      router.refresh()
-      onSuccess?.()
-    } catch (error) {
-      console.error('Error updating car:', error)
-    }
-  }, [car.id, imageUrl, router, onSuccess])
+    }, [car.imageUrl, onImageUrlChange])
 
   return (
     <Form {...form}>
