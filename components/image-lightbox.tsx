@@ -19,14 +19,14 @@ export function ImageLightbox({ children, imageUrl, alt }: ImageLightboxProps) {
                 {children}
             </div>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="max-w-5xl max-h-[90vh] p-0">
-                    <div className="relative w-full h-[80vh] flex items-center justify-center bg-muted/50">
+                <DialogContent className="max-w-none w-screen h-screen p-0 translate-x-[-50%] translate-y-[-50%] left-[50%] top-[50%] sm:rounded-none">
+                    <div className="relative w-full h-full flex items-center justify-center bg-black/90">
                         <Image
                             src={imageUrl}
                             alt={alt}
                             fill
                             className="object-contain"
-                            sizes="(max-width: 768px) 100vw, 80vw"
+                            sizes="100vw"
                         />
                     </div>
                 </DialogContent>
