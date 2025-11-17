@@ -33,4 +33,22 @@ export const MUTATIONS = {
             archived: input.archived ?? false,
         });
     },
+    updateCar: async function (id: number, input: {
+        manufacturer: string;
+        model: string;
+        points: number;
+        imageUrl: string | null;
+        episode: number;
+    }) {
+        return await db
+            .update(carsSchema)
+            .set({
+                manufacturer: input.manufacturer,
+                model: input.model,
+                points: input.points,
+                imageUrl: input.imageUrl,
+                episode: input.episode,
+            })
+            .where(eq(carsSchema.id, id));
+    },
 };

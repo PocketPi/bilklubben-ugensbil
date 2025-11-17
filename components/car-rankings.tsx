@@ -3,11 +3,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import React from "react"
 import { QUERIES } from "@/app/server/db/queries"
 import { ImageLightbox } from "./image-lightbox"
+import { auth } from "@clerk/nextjs/server"
+import { EditCarButton } from "./edit-car-button"
 
 const placeholderImage = "/car-placeholder.jpg"
 
 export async function CarRankings() {
   const cars = await QUERIES.getCars()
+  const session = await auth()
+  const isLoggedIn = !!session?.userId
 
   return (
     <>
@@ -21,6 +25,7 @@ export async function CarRankings() {
               <TableHead>Model</TableHead>
               <TableHead className="w-[80px]">Episode</TableHead>
               <TableHead className="max-[500px]:hidden w-[200px]">Billede</TableHead>
+              {isLoggedIn && <TableHead className="w-[60px]">Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -46,9 +51,14 @@ export async function CarRankings() {
                       </div>
                     </ImageLightbox>
                   </TableCell>
+                  {isLoggedIn && (
+                    <TableCell>
+                      <EditCarButton car={car} />
+                    </TableCell>
+                  )}
                 </TableRow>
                 <TableRow className="min-[501px]:hidden">
-                  <TableCell colSpan={5} className="pt-2 pb-6 text-center">
+                  <TableCell colSpan={isLoggedIn ? 6 : 5} className="pt-2 pb-6 text-center">
                     <ImageLightbox imageUrl={car.imageUrl || placeholderImage} alt={`${car.manufacturer} ${car.model}`}>
                       <div className="relative aspect-[3/2] w-[200px] mx-auto">
                         <Image
