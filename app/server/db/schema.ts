@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const cars = pgTable('cars', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -8,4 +8,5 @@ export const cars = pgTable('cars', {
   imageUrl: text('image_url'),
   episode: integer('episode'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
+  archived: boolean('archived').notNull().default(false),
 });

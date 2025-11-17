@@ -2,7 +2,7 @@ import "server-only";
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import { cars as carsSchema } from "./schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 const db = drizzle(process.env.DATABASE_URL!);
 
 export const QUERIES = {
@@ -10,6 +10,7 @@ export const QUERIES = {
         return db
             .select()
             .from(carsSchema)
+            .where(eq(carsSchema.archived, false))
             .orderBy(desc(carsSchema.points));
     },
 };
@@ -21,6 +22,7 @@ export const MUTATIONS = {
         points: number;
         imageUrl: string;
         episode: number;
+        archived?: boolean;
     }) {
         return await db.insert(carsSchema).values({
             manufacturer: input.manufacturer,
@@ -28,6 +30,7 @@ export const MUTATIONS = {
             points: input.points,
             imageUrl: input.imageUrl,
             episode: input.episode,
+            archived: input.archived ?? false,
         });
     },
 };
