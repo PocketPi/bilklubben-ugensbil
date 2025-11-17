@@ -32,12 +32,19 @@ interface EditCarFormProps {
     imageUrl: string | null
   }
   onSuccess?: () => void
+  formId?: string
+  onImageUrlChange?: (url: string | null) => void
 }
 
-export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
+export function EditCarForm({ car, onSuccess, formId, onImageUrlChange }: EditCarFormProps) {
   const router = useRouter()
   const [isImageUploaded, setIsImageUploaded] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(car.imageUrl)
+
+  const updateImageUrl = (url: string | null) => {
+    setImageUrl(url)
+    onImageUrlChange?.(url)
+  }
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,9 +59,10 @@ export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
   useEffect(() => {
     if (car.imageUrl) {
       setImageUrl(car.imageUrl)
+      onImageUrlChange?.(car.imageUrl)
       setIsImageUploaded(true)
     }
-  }, [car.imageUrl])
+  }, [car.imageUrl, onImageUrlChange])
 
   async function onSubmit(values: FormValues) {
     try {
@@ -85,7 +93,7 @@ export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-xl">
+      <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-xl">
         <FormField
           control={form.control}
           name="manufacturer"
@@ -168,7 +176,7 @@ export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
                 size="icon"
                 className="absolute top-2 right-2"
                 onClick={() => {
-                  setImageUrl(null)
+                  updateImageUrl(null)
                   setIsImageUploaded(false)
                 }}
               >
@@ -180,7 +188,7 @@ export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 if (res?.[0]) {
-                  setImageUrl(res[0].url)
+                  updateImageUrl(res[0].url)
                   setIsImageUploaded(true)
                 }
               }}
@@ -191,12 +199,9 @@ export function EditCarForm({ car, onSuccess }: EditCarFormProps) {
             />
           )}
         </div>
-
-        <Button type="submit" disabled={!imageUrl}>
-          Update Car
-        </Button>
       </form>
     </Form>
   )
 }
+
 
