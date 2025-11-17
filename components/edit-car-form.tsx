@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import * as z from "zod"
-import { useState, useEffect, useImperativeHandle, forwardRef } from "react"
+import { useState, useEffect, useImperativeHandle, forwardRef, useCallback, useRef } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
 
@@ -62,12 +62,22 @@ export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
       },
     })
 
+    const formRef = useRef<HTMLFormElement>(null)
+
     useImperativeHandle(ref, () => ({
-      submit: () => {
-        form.handleSubmit(onSubmit)()
+      submit: async () => {
+        if (formRef.current) {
+          formRef.current.requestSubmit()
+        } else {
+          const isValid = await form.trigger()
+          if (isValid) {
+            const values = form.getValues()
+            await onSubmit(values)
+          }
+        }
       },
       imageUrl,
-    }))
+    }), [form, imageUrl, onSubmit])
 
   useEffect(() => {
     if (car.imageUrl) {
@@ -77,7 +87,7 @@ export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
     }
   }, [car.imageUrl, onImageUrlChange])
 
-  async function onSubmit(values: FormValues) {
+  const onSubmit = useCallback(async (values: FormValues) => {
     try {
       const response = await fetch(`/api/cars/${car.id}`, {
         method: 'PATCH',
@@ -102,11 +112,11 @@ export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
     } catch (error) {
       console.error('Error updating car:', error)
     }
-  }
+  }, [car.id, imageUrl, router, onSuccess])
 
   return (
     <Form {...form}>
-      <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-xl">
+      <form ref={formRef} id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-xl">
         <FormField
           control={form.control}
           name="manufacturer"

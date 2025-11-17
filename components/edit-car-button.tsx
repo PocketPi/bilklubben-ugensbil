@@ -36,8 +36,12 @@ export function EditCarButton({ car }: EditCarButtonProps) {
     }
   }
 
-  const handleSubmit = () => {
-    formRef.current?.submit()
+  const handleSubmit = async () => {
+    try {
+      await formRef.current?.submit()
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
   }
 
   return (
