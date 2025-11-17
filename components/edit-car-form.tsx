@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import * as z from "zod"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useImperativeHandle, forwardRef } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
 
@@ -36,25 +36,38 @@ interface EditCarFormProps {
   onImageUrlChange?: (url: string | null) => void
 }
 
-export function EditCarForm({ car, onSuccess, formId, onImageUrlChange }: EditCarFormProps) {
-  const router = useRouter()
-  const [isImageUploaded, setIsImageUploaded] = useState(false)
-  const [imageUrl, setImageUrl] = useState<string | null>(car.imageUrl)
+export interface EditCarFormRef {
+  submit: () => void
+  imageUrl: string | null
+}
 
-  const updateImageUrl = (url: string | null) => {
-    setImageUrl(url)
-    onImageUrlChange?.(url)
-  }
+export const EditCarForm = forwardRef<EditCarFormRef, EditCarFormProps>(
+  ({ car, onSuccess, formId, onImageUrlChange }, ref) => {
+    const router = useRouter()
+    const [isImageUploaded, setIsImageUploaded] = useState(false)
+    const [imageUrl, setImageUrl] = useState<string | null>(car.imageUrl)
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      manufacturer: car.manufacturer || "",
-      model: car.model || "",
-      points: car.points || 0,
-      episode: car.episode || 1,
-    },
-  })
+    const updateImageUrl = (url: string | null) => {
+      setImageUrl(url)
+      onImageUrlChange?.(url)
+    }
+
+    const form = useForm<FormValues>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        manufacturer: car.manufacturer || "",
+        model: car.model || "",
+        points: car.points || 0,
+        episode: car.episode || 1,
+      },
+    })
+
+    useImperativeHandle(ref, () => ({
+      submit: () => {
+        form.handleSubmit(onSubmit)()
+      },
+      imageUrl,
+    }))
 
   useEffect(() => {
     if (car.imageUrl) {
@@ -202,6 +215,9 @@ export function EditCarForm({ car, onSuccess, formId, onImageUrlChange }: EditCa
       </form>
     </Form>
   )
-}
+  }
+)
+
+EditCarForm.displayName = "EditCarForm"
 
 

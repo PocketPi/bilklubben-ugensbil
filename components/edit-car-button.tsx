@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,7 +11,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { EditCarForm } from "./edit-car-form"
+import { EditCarForm, EditCarFormRef } from "./edit-car-form"
 
 interface EditCarButtonProps {
   car: {
@@ -27,12 +27,17 @@ interface EditCarButtonProps {
 export function EditCarButton({ car }: EditCarButtonProps) {
   const [open, setOpen] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(car.imageUrl)
+  const formRef = useRef<EditCarFormRef>(null)
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
     if (newOpen) {
       setImageUrl(car.imageUrl)
     }
+  }
+
+  const handleSubmit = () => {
+    formRef.current?.submit()
   }
 
   return (
@@ -48,13 +53,14 @@ export function EditCarButton({ car }: EditCarButtonProps) {
           <DialogTitle>Edit Car</DialogTitle>
         </DialogHeader>
         <EditCarForm 
+          ref={formRef}
           car={car} 
           formId="edit-car-form"
           onSuccess={() => setOpen(false)}
           onImageUrlChange={setImageUrl}
         />
-        <DialogFooter>
-          <Button type="submit" form="edit-car-form" disabled={!imageUrl}>
+        <DialogFooter className="justify-center">
+          <Button onClick={handleSubmit} disabled={!imageUrl}>
             Update Car
           </Button>
         </DialogFooter>
