@@ -33,7 +33,7 @@ export async function CarRankings() {
                   <TableCell>{car.model}</TableCell>
                   <TableCell>{car.episode}</TableCell>
                   <TableCell className="min-[501px]:align-middle max-[500px]:hidden p-2">
-                    <ImageLightbox>
+                    <ImageLightbox imageUrl={car.imageUrl || placeholderImage} alt={`${car.manufacturer} ${car.model}`}>
                       <div className="relative aspect-[3/2] w-full">
                         <Image
                           src={car.imageUrl || placeholderImage}
@@ -41,7 +41,7 @@ export async function CarRankings() {
                           fill
                           sizes="(min-width: 501px) 200px, 100vw"
                           priority={index < 3}
-                          className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
+                          className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-contain"
                         />
                       </div>
                     </ImageLightbox>
@@ -49,7 +49,7 @@ export async function CarRankings() {
                 </TableRow>
                 <TableRow className="min-[501px]:hidden">
                   <TableCell colSpan={5} className="pt-2 pb-6 text-center">
-                    <ImageLightbox>
+                    <ImageLightbox imageUrl={car.imageUrl || placeholderImage} alt={`${car.manufacturer} ${car.model}`}>
                       <div className="relative aspect-[3/2] w-[200px] mx-auto">
                         <Image
                           src={car.imageUrl || placeholderImage}
@@ -57,7 +57,7 @@ export async function CarRankings() {
                           fill
                           sizes="200px"
                           priority={index < 3}
-                          className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-cover"
+                          className="rounded-md cursor-pointer hover:opacity-80 transition-opacity object-contain"
                         />
                       </div>
                     </ImageLightbox>
