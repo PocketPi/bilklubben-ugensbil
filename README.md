@@ -5,3 +5,9 @@
 - [x] fetch cars from db
 - [ ] add PostHogProvider
 - [ ] get placeholder image from NP
+
+## Services used
+- Hosted on vercel.com
+- Database on supabase.com
+- Files stored at uploadthing.com
+- Auth on clerk.com

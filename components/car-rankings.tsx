@@ -16,10 +16,11 @@ export async function CarRankings() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[60px]">Rank</TableHead>
-              <TableHead className="w-[80px]">Points</TableHead>
-              <TableHead className="w-[120px]">Manufacturer</TableHead>
-              <TableHead className="w-[120px]">Model</TableHead>
-              <TableHead className="max-[500px]:hidden w-[200px]">Image</TableHead>
+              <TableHead className="w-[80px]">Point</TableHead>
+              <TableHead>Producent</TableHead>
+              <TableHead>Model</TableHead>
+              <TableHead className="w-[80px]">Episode</TableHead>
+              <TableHead className="max-[500px]:hidden w-[200px]">Billede</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -30,6 +31,7 @@ export async function CarRankings() {
                   <TableCell>{car.points}/100</TableCell>
                   <TableCell>{car.manufacturer}</TableCell>
                   <TableCell>{car.model}</TableCell>
+                  <TableCell>{car.episode}</TableCell>
                   <TableCell className="min-[501px]:align-middle max-[500px]:hidden p-2">
                     <ImageLightbox>
                       <div className="relative aspect-[3/2] w-full">
@@ -46,7 +48,7 @@ export async function CarRankings() {
                   </TableCell>
                 </TableRow>
                 <TableRow className="min-[501px]:hidden">
-                  <TableCell colSpan={4} className="pt-2 pb-6 text-center">
+                  <TableCell colSpan={5} className="pt-2 pb-6 text-center">
                     <ImageLightbox>
                       <div className="relative aspect-[3/2] w-[200px] mx-auto">
                         <Image

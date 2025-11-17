@@ -16,16 +16,18 @@ import { UploadButton } from "@/app/utils/uploadthing"
 const formSchema = z.object({
   manufacturer: z.string().min(1, "Manufacturer is required"),
   model: z.string().min(1, "Model is required"),
-  points: z.string().transform(Number).pipe(z.number().min(0).max(100)),
-  episode: z.string().transform(Number).pipe(z.number().min(1)),
+  points: z.number().min(0).max(100),
+  episode: z.number().min(1),
 })
+
+type FormValues = z.infer<typeof formSchema>
 
 export function AddCarForm() {
   const router = useRouter()
   const [isImageUploaded, setIsImageUploaded] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       manufacturer: "",
@@ -35,7 +37,7 @@ export function AddCarForm() {
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
       const response = await fetch('/api/cars', {
         method: 'POST',
@@ -98,7 +100,14 @@ export function AddCarForm() {
             <FormItem>
               <FormLabel>Points (0-100)</FormLabel>
               <FormControl>
-                <Input type="number" min="0" max="100" {...field} />
+                <Input 
+                  type="number" 
+                  min="0" 
+                  max="100" 
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.value === "" ? 0 : Number(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -111,7 +120,13 @@ export function AddCarForm() {
             <FormItem>
               <FormLabel>Episode Number</FormLabel>
               <FormControl>
-                <Input type="number" min="1" {...field} />
+                <Input 
+                  type="number" 
+                  min="1" 
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => field.onChange(e.target.value === "" ? 1 : Number(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
